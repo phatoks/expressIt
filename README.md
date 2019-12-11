@@ -1,5 +1,5 @@
 # expressIt
-## An android chat application developed using Android Studio
+## An android chat application developed using Kotlin on Android Studio
 
 This repository is for a simple chat application that can facilitate communication between individuals. This application will emulate 
 the main features of many of the existing chat application we can think about like WhatsApp and Viber. With this application, 
