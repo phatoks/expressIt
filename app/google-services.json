@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "379833429370",
+    "firebase_url": "https://expressit-2026c.firebaseio.com",
+    "project_id": "expressit-2026c",
+    "storage_bucket": "expressit-2026c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:379833429370:android:1a3374d9da7e30033cbac3",
+        "android_client_info": {
+          "package_name": "com.resocoder.expressIt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "379833429370-3tviiuiebufj266gh6mul86dnopuhtld.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDls2vIkQzWdsOvJ4ViztveusmysCAruA4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "379833429370-3tviiuiebufj266gh6mul86dnopuhtld.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
