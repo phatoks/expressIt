@@ -13,16 +13,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //create the default fragment.Immediately show list of user
         replaceFragment(PeopleFragment())
 
+
+        //when the people or account button is selected, show the appropraite fragment(people fragment or account fragment)
         navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_people -> {
-                    replaceFragment(PeopleFragment())
+                    replaceFragment(PeopleFragment()) //show people fragment
                     true
                 }
                 R.id.navigation_my_account -> {
-                    replaceFragment(MyAccountFragment())
+                    replaceFragment(MyAccountFragment()) //show my account fragment
                     true
                 }
                 else -> false

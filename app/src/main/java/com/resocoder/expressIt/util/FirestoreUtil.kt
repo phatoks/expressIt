@@ -14,28 +14,30 @@ import com.xwray.groupie.kotlinandroidextensions.Item
 
 
 object FirestoreUtil {
-    private val firestoreInstance: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
-
+    private val firestoreInstance: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() } //lazy initialization, values from firebasfirestore.getInstance() will be set in firestoreInstance only when needed
+        //hold user information
     private val currentUserDocRef: DocumentReference
         get() = firestoreInstance.document("users/${FirebaseAuth.getInstance().currentUser?.uid
                 ?: throw NullPointerException("UID is null.")}")
 
-    private val chatChannelsCollectionRef = firestoreInstance.collection("chatChannels")
+    private val chatChannelsCollectionRef = firestoreInstance.collection("chatChannels") //stores individual chat channel and all messages
 
+    //user initialization function
     fun initCurrentUserIfFirstTime(onComplete: () -> Unit) {
         currentUserDocRef.get().addOnSuccessListener { documentSnapshot ->
             if (!documentSnapshot.exists()) {
                 val newUser = User(FirebaseAuth.getInstance().currentUser?.displayName ?: "",
                         "", null, mutableListOf())
-                currentUserDocRef.set(newUser).addOnSuccessListener {
+                currentUserDocRef.set(newUser).addOnSuccessListener { //set document in firestore to contain new user
                     onComplete()
                 }
             }
             else
-                onComplete()
+                onComplete() //complete here if the document snapshot already exists
         }
     }
 
+    //updating user profile
     fun updateCurrentUser(name: String = "", bio: String = "", profilePicturePath: String? = null) {
         val userFieldMap = mutableMapOf<String, Any>()
         if (name.isNotBlank()) userFieldMap["name"] = name
@@ -52,6 +54,8 @@ object FirestoreUtil {
                 }
     }
 
+    //listener for all the people in the user collection
+
     fun addUsersListener(context: Context, onListen: (List<Item>) -> Unit): ListenerRegistration {
         return firestoreInstance.collection("users")
                 .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
@@ -59,37 +63,43 @@ object FirestoreUtil {
                         Log.e("FIRESTORE", "Users listener error.", firebaseFirestoreException)
                         return@addSnapshotListener
                     }
-
+                    //create mutable list of items if there is no exceptions
                     val items = mutableListOf<Item>()
-                    querySnapshot!!.documents.forEach {
-                        if (it.id != FirebaseAuth.getInstance().currentUser?.uid)
+                    querySnapshot!!.documents.forEach { //get user from the document snapshot
+                        if (it.id != FirebaseAuth.getInstance().currentUser?.uid)  //display users apart from the currently logged in user
                             items.add(PersonItem(it.toObject(User::class.java)!!, it.id, context))
                     }
                     onListen(items)
                 }
     }
-
+    //accept user registration
     fun removeListener(registration: ListenerRegistration) = registration.remove()
 
     fun getOrCreateChatChannel(otherUserId: String,
                                onComplete: (channelId: String) -> Unit) {
-        currentUserDocRef.collection("engagedChatChannels")
+        currentUserDocRef.collection("engagedChatChannels") //remember each user's chat channel
+
+                //use otherUserid to get other user's current channel
                 .document(otherUserId).get().addOnSuccessListener {
                     if (it.exists()) {
                         onComplete(it["channelId"] as String)
                         return@addOnSuccessListener
                     }
 
+
                     val currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
 
+                    //create chat channel if it doesn't exist
                     val newChannel = chatChannelsCollectionRef.document()
                     newChannel.set(ChatChannel(mutableListOf(currentUserId, otherUserId)))
 
+                    //save the new chat channel for current user
                     currentUserDocRef
                             .collection("engagedChatChannels")
                             .document(otherUserId)
                             .set(mapOf("channelId" to newChannel.id))
 
+                    //save the other user channel id to their engaged chat channels
                     firestoreInstance.collection("users").document(otherUserId)
                             .collection("engagedChatChannels")
                             .document(currentUserId)
@@ -99,6 +109,7 @@ object FirestoreUtil {
                 }
     }
 
+    //listener for all the messages in the chat channel
     fun addChatMessagesListener(channelId: String, context: Context,
                                 onListen: (List<Item>) -> Unit): ListenerRegistration {
         return chatChannelsCollectionRef.document(channelId).collection("messages")
@@ -109,12 +120,14 @@ object FirestoreUtil {
                         return@addSnapshotListener
                     }
 
+                    //create mutable list of items of the messages if there is no exceptions
+
                     val items = mutableListOf<Item>()
                     querySnapshot!!.documents.forEach {
                         if (it["type"] == MessageType.TEXT)
-                            items.add(TextMessageItem(it.toObject(TextMessage::class.java)!!, context))
+                            items.add(TextMessageItem(it.toObject(TextMessage::class.java)!!, context)) //add text messages
                         else
-                            items.add(ImageMessageItem(it.toObject(ImageMessage::class.java)!!, context))
+                            items.add(ImageMessageItem(it.toObject(ImageMessage::class.java)!!, context)) //add image messages
                         return@forEach
                     }
                     onListen(items)

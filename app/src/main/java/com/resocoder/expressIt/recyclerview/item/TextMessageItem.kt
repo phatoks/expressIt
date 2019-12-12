@@ -11,12 +11,13 @@ class TextMessageItem(val message: TextMessage,
                       val context: Context)
     : MessageItem(message) {
     override fun bind(viewHolder: ViewHolder, position: Int) {
-        viewHolder.textView_message_text.text = message.text
+        viewHolder.textView_message_text.text = message.text  //get the view holder
         super.bind(viewHolder, position)
     }
 
     override fun getLayout() = R.layout.item_text_message
 
+    //refresh only the new message sent and not all the messages
     override fun isSameAs(other: com.xwray.groupie.Item<*>?): Boolean {
         if (other !is TextMessageItem)
             return false

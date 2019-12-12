@@ -7,25 +7,28 @@ import java.util.*
 
 
 object StorageUtil {
-    private val storageInstance: FirebaseStorage by lazy { FirebaseStorage.getInstance() }
+    private val storageInstance: FirebaseStorage by lazy { FirebaseStorage.getInstance() }  //lazy initialization, values from firebasstorage.getInstance() will be set in storageInstance only when needed
 
     private val currentUserRef: StorageReference
         get() = storageInstance.reference
                 .child(FirebaseAuth.getInstance().currentUser?.uid
                         ?: throw NullPointerException("UID is null."))
 
+    //store profile picture on firebase cloud storage
     fun uploadProfilePhoto(imageBytes: ByteArray,
                            onSuccess: (imagePath: String) -> Unit) {
-        val ref = currentUserRef.child("profilePictures/${UUID.nameUUIDFromBytes(imageBytes)}")
+        val ref = currentUserRef.child("profilePictures/${UUID.nameUUIDFromBytes(imageBytes)}") //location to save uploaded profile picture
         ref.putBytes(imageBytes)
                 .addOnSuccessListener {
                     onSuccess(ref.path)
                 }
     }
 
+    //store Image Message on firebase cloud storage
+
     fun uploadMessageImage(imageBytes: ByteArray,
                            onSuccess: (imagePath: String) -> Unit) {
-        val ref = currentUserRef.child("messages/${UUID.nameUUIDFromBytes(imageBytes)}")
+        val ref = currentUserRef.child("messages/${UUID.nameUUIDFromBytes(imageBytes)}") //location to save uploaded profile picture
         ref.putBytes(imageBytes)
                 .addOnSuccessListener {
                     onSuccess(ref.path)

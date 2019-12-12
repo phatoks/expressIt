@@ -28,14 +28,14 @@ import java.io.ByteArrayOutputStream
 
 class MyAccountFragment : Fragment() {
 
-    private val RC_SELECT_IMAGE = 2
-    private lateinit var selectedImageBytes: ByteArray
+    private val RC_SELECT_IMAGE = 2  //requestcode
+    private lateinit var selectedImageBytes: ByteArray //keep track of selected image
     private var pictureJustChanged = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_my_account, container, false)
-
+        //action for clicking profile picture
         view.apply {
             imageView_profile_picture.setOnClickListener {
                 val intent = Intent().apply {
@@ -46,6 +46,8 @@ class MyAccountFragment : Fragment() {
                 startActivityForResult(Intent.createChooser(intent, "Select Image"), RC_SELECT_IMAGE)
             }
 
+
+            //action for clicking save button, check to see if there has been any change to the picture, name or bio before saving
             btn_save.setOnClickListener {
                 if (::selectedImageBytes.isInitialized)
                     StorageUtil.uploadProfilePhoto(selectedImageBytes) { imagePath ->
@@ -57,19 +59,19 @@ class MyAccountFragment : Fragment() {
                             editText_bio.text.toString(), null)
                 toast("Saving")
             }
-
+            //action for clicking signout
             btn_sign_out.setOnClickListener {
-                AuthUI.getInstance()
+                AuthUI.getInstance()  //firebase Auth
                         .signOut(this@MyAccountFragment.context!!)
                         .addOnCompleteListener {
-                            startActivity(intentFor<SignInActivity>().newTask().clearTask())
+                            startActivity(intentFor<SignInActivity>().newTask().clearTask()) //when user is signed go to the signactivity
                         }
             }
         }
 
         return view
     }
-
+    //when image is selected
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_SELECT_IMAGE && resultCode == Activity.RESULT_OK &&
                 data != null && data.data != null) {
@@ -81,6 +83,7 @@ class MyAccountFragment : Fragment() {
             selectedImageBmp.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
             selectedImageBytes = outputStream.toByteArray()
 
+            //load pictures from firebase cloud storage
             GlideApp.with(this)
                     .load(selectedImageBytes)
                     .into(imageView_profile_picture)
@@ -91,7 +94,7 @@ class MyAccountFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        FirestoreUtil.getCurrentUser { user ->
+        FirestoreUtil.getCurrentUser { user -> //load user from firestore
             if (this@MyAccountFragment.isVisible) {
                 editText_name.setText(user.name)
                 editText_bio.setText(user.bio)

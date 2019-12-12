@@ -57,6 +57,7 @@ dependencies {
     implementation 'com.xwray:groupie:2.0.3'
     implementation 'com.xwray:groupie-kotlin-android-extensions:2.0.3'
 
+    //access google services
     apply plugin: 'com.google.gms.google-services'
     //kotlin annotation processor
     apply plugin: 'kotlin-kapt'

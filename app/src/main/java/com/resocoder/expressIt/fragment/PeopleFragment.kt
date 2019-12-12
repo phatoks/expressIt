@@ -25,9 +25,9 @@ import org.jetbrains.anko.support.v4.startActivity
 
 class PeopleFragment : Fragment() {
 
-    private lateinit var userListenerRegistration: ListenerRegistration
+    private lateinit var userListenerRegistration: ListenerRegistration //remember firestore listener
 
-    private var shouldInitRecyclerView = true
+    private var shouldInitRecyclerView = true //remember the recycler view
 
     private lateinit var peopleSection: Section
 
@@ -46,13 +46,15 @@ class PeopleFragment : Fragment() {
         shouldInitRecyclerView = true
     }
 
+    //update the recycler view
+
     private fun updateRecyclerView(items: List<Item>) {
 
         fun init() {
             recycler_view_people.apply {
                 layoutManager = LinearLayoutManager(this@PeopleFragment.context)
                 adapter = GroupAdapter<ViewHolder>().apply {
-                    peopleSection = Section(items)
+                    peopleSection = Section(items) //holds the items
                     add(peopleSection)
                     setOnItemClickListener(onItemClick)
                 }

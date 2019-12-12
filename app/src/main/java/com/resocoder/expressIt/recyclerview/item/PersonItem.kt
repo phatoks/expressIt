@@ -14,7 +14,7 @@ class PersonItem(val person: User,
                  val userId: String,
                  private val context: Context)
     : Item() {
-
+    //container for user list in the people fragment
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.textView_name.text = person.name
         viewHolder.textView_bio.text = person.bio

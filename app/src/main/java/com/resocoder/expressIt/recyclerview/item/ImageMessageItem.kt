@@ -15,9 +15,9 @@ class ImageMessageItem(val message: ImageMessage,
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
         super.bind(viewHolder, position)
-        GlideApp.with(context)
+        GlideApp.with(context)//upload image
                 .load(StorageUtil.pathToReference(message.imagePath))
-                .placeholder(R.drawable.ic_image_black_24dp)
+                .placeholder(R.drawable.ic_image_black_24dp) //displays just before image is sent
                 .into(viewHolder.imageView_message_image)
     }
 
