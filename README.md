@@ -9,12 +9,12 @@ different means by which they can communicate with friends, families and busines
 was to create a fun application that can bring people closer to the information they require.
 To successfully complete this project the following tools, resources and libraries were used apart from the general inbuild dependencies that will be implemented in the app.gradle file;
 
-*Android Studio
-*Kotlin Programming Langauage on Android Studio
-*Firebase Firestore Database
-*Firebase Cloud Storage
-*Firebase Email Authentication
-*Firebase Cloud functions
-*Anko Kotlin Library
-*Groupie
-*Kotlin annotation processor
+* Android Studio
+* Kotlin Programming Langauage on Android Studio
+* Firebase Firestore Database
+* Firebase Cloud Storage
+* Firebase Email Authentication
+* Firebase Cloud functions
+* Anko Kotlin Library
+* Groupie Library
+* Kotlin annotation processor
